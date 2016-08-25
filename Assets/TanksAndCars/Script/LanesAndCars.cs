@@ -4,21 +4,35 @@ using System.Collections;
 
 public class LanesAndCars: MonoBehaviour {
 
-	string state = "intro"; // intro||end
+	bool addTree = false;
+
+	string state = "start"; // intro||end
 	public string GetState() {
 		return state;
 	}
 
 	public GameObject break1;
 	public GameObject break2;
+	public WheelScript wheel1;
+	public WheelScript wheel2;
 	public TextMesh textObj;
+
 	string gameTime = "";
+	bool backupWrongTurn = false;
+
+	public AudioSource audioSpeed;
+	public AudioSource audioSpeedExtended;
+	public AudioSource audioBreak;
 
 	public GameObject backgroundPrefab; 
 	public GameObject backgroundPrefabLeft; 
 	public GameObject backgroundPrefabRight; 
 	public GameObject backgroundPrefabStart;
 	public GameObject backgroundPrefabEnd; 
+
+	public GameObject tree0;
+	public GameObject tree1;
+	public GameObject tree2;
 
 
 	int[] arrLevel = {0,0,0,4,4,4,0,0,1,0,1,2,0,0,1,0,0,0,1,0,0,0,1,0,2,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,2,1,2,1,3,0};
@@ -27,7 +41,7 @@ public class LanesAndCars: MonoBehaviour {
 	public GameObject ground;
 
 	float offset = 0.15f;
-	float[] arrLane = { 0.0f, 1.8f };
+	float[] arrLane = { 0.0f, 1.8f }; 
 
 	// Use this for initialization
 	void Start () {
@@ -55,6 +69,30 @@ public class LanesAndCars: MonoBehaviour {
 			}
 			if (obj!=null) {
 				obj.transform.parent = ground.transform;
+			}
+			// add trees
+			if (addTree)
+			if (UnityEngine.Random.Range(0,4)==0) {
+				int amount = UnityEngine.Random.Range(0,3);
+				for (int a=0;a<amount;a++) {
+					int which = UnityEngine.Random.Range(0,3);
+					float wherex = Random.Range(6.0f,10.0f);
+					float wherey = 7.2f;
+					float wherez = posz + Random.Range(-4.0f,-8.0f);
+					GameObject objx = null;
+					if (which==0) {
+						objx = (GameObject) Instantiate( tree0, new Vector3(wherex,wherey,wherez), new Quaternion());
+					}
+					if (which==1) {
+						objx = (GameObject) Instantiate( tree1, new Vector3(wherex,wherey,wherez), new Quaternion());
+					}
+					if (which==2) {
+						objx = (GameObject) Instantiate( tree2, new Vector3(wherex,wherey,wherez), new Quaternion());
+					}
+					if (objx!=null) {
+						objx.transform.parent = ground.transform;
+					}
+				}
 			}
 			posz = posz + depth;
 		}
@@ -89,12 +127,20 @@ public class LanesAndCars: MonoBehaviour {
 			time = Time.time;
 			levelz = -6.0f * 5.0f;
 			SetMessage("START");
+			wheel1.enabled = false;
+			wheel2.enabled = false;
 			SetCarPosition(levelz);
+			audioSpeed.Stop();
+			audioSpeedExtended.Stop();
 		}
 		if (newstate.Equals("")) {
 			StartGame();
 		}
 		if (newstate.Equals("stop")) {
+			wheel1.enabled = false;
+			wheel2.enabled = false;
+			audioSpeed.Stop();	
+			audioSpeedExtended.Stop();
 		}
 	}
 
@@ -105,6 +151,9 @@ public class LanesAndCars: MonoBehaviour {
 		// speedtoGo = speed;
 		state = "";
 		actualTile = 0;
+		wheel1.enabled = true;
+		wheel2.enabled = true;
+
 	}
 
 	void FixedUpdate () {
@@ -189,6 +238,19 @@ public class LanesAndCars: MonoBehaviour {
 			// Debug.Log("new actualLane "+actualTile+" "+actJob+"-["+speedtoGo+"/"+speedo+"]-"+levelz);
 			//}
 			actualTile = iactualTile;
+
+			// sound
+			if (wrongTurn!=backupWrongTurn) {
+				if (wrongTurn) {
+					audioSpeed.Play();	
+					audioSpeedExtended.Stop();
+				}
+				if (!wrongTurn) {
+					audioSpeed.Stop();	
+					audioSpeedExtended.Play();
+				}
+			}
+			backupWrongTurn = wrongTurn;
 		}
 	}
 
