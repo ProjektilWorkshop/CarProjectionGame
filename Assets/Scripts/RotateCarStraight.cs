@@ -12,6 +12,6 @@ public class RotateCarStraight : MonoBehaviour {
 	void Update () {
 		float xRot = Mathf.Sin(Time.time * 20.0f ) * 1.0f;
 		float zRot = Mathf.Sin(Time.time * 5.0f ) * 2.0f;
-		transform.localEulerAngles = new Vector3 ( xRot,-36, zRot );
+		transform.localEulerAngles = new Vector3 ( xRot,90, zRot );
 	}
 }
