@@ -2192,14 +2192,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e76fbf429d34de79f5fe3d1c8fd2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyTank: {fileID: 1000012259703334, guid: 8f3b449ee9be3476cae1893df603fd7e, type: 2}
   backgroundPrefab: {fileID: 100906, guid: bbbd0459c1f4d4434a3f3cbc8086655b, type: 2}
   backgroundPrefabLeft: {fileID: 100906, guid: bbbd0459c1f4d4434a3f3cbc8086655b, type: 2}
   backgroundPrefabRight: {fileID: 193056, guid: b8b8098a8f0784459bd63a1af62bb955,
     type: 2}
   level: {fileID: 2042079961}
   ground: {fileID: 593236035}
-  enemies: {fileID: 1611021817}
   levelz: 0
 --- !u!1 &1611021817
 GameObject:
@@ -2277,8 +2275,8 @@ Camera:
   m_GameObject: {fileID: 1700743427}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0.39705884, b: 0.1013184, a: 0.019607844}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0

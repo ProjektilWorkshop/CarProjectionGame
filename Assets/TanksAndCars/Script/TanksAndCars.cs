@@ -4,19 +4,41 @@ using System.Collections;
 
 public class TanksAndCars: MonoBehaviour {
 
+	public GameObject enemyTank;
+
 	public GameObject backgroundPrefab; 
 	public GameObject backgroundPrefabLeft; 
 	public GameObject backgroundPrefabRight; 
-	int[] arrLevel = {0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,3};
+	int[] arrLevel = {0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,0,0,0,0,0,3,0,0,0,0};
 
 	public GameObject level;
 	public GameObject ground;
+	public GameObject enemies;
 
-	float offset = 0.1f; // 0.05f;
-	float[] arrLane = { 0.0f, 0.08f };
+	float offset = 1.15f; // 0.05f;
+	float[] arrLane = { 0.0f, 1.8f };
+
+	float timeTimerNextEnemy = 0.0f;
+	float timeIntervalNextEnemy = 3.0f;
 
 	// Use this for initialization
 	void Start () {
+
+		// time for an enemy?
+		if (Time.time>timeTimerNextEnemy) {
+			Debug.Log("NewEnemy");
+			timeTimerNextEnemy = Time.time + timeIntervalNextEnemy;
+			// create one! now ...
+			GameObject obj = null;
+			// if (el==0) {
+			obj = (GameObject) Instantiate( enemyTank, new Vector3(0.0f,0.0f,0.0f), new Quaternion());
+			//}
+			if (obj!=null) {
+				obj.transform.parent = enemies.transform;
+			}
+
+			
+		}
 
 		// create a level!
 		// random
@@ -36,7 +58,7 @@ public class TanksAndCars: MonoBehaviour {
 			if (obj!=null) {
 				obj.transform.parent = ground.transform;
 			}
-			posz = posz +0.2f;
+			posz = posz +depth;
 		}
 
 		time = Time.time;
@@ -46,17 +68,17 @@ public class TanksAndCars: MonoBehaviour {
 	
 	// Update is called once per frame
 	float speedo = 0.0f; // actual speed
-	float speedSpeed = 0.001f;
+	float speedSpeed = 0.03f;
 
-	float speed = -0.003f;
-	float speedExtended = -0.012f;
+	float speed = -0.07f;
+	float speedExtended = -0.4f;
 	int actualLaneLevel = 0;
 	int actualLane = 0;
-	float changeLaneSpeed = 0.01f;
+	float changeLaneSpeed = 0.3f;
 	float actSpeedX = 0.0f;
 
 	public float levelz = 0.0f;
-	float depth = 0.2f;
+	float depth = 6.0f;
 	int actualTile = 0;
 
 	int actJob = 0;
@@ -113,7 +135,7 @@ public class TanksAndCars: MonoBehaviour {
 		if (actpos<actSpeedX) actSpeedX = actSpeedX - changeLaneSpeed;
 		if (actpos>actSpeedX) actSpeedX = actSpeedX + changeLaneSpeed;
 		ground.transform.position = new Vector3(0.0f+offset+actSpeedX,0.0f,levelz);
-		int iactualTile = (int)((levelz-0.4f)/depth);
+		int iactualTile = (int)((levelz-depth)/depth);
 		// next level
 		/*
 		if (((-actualTile)+1)>arrLevel.Length) {
@@ -121,9 +143,12 @@ public class TanksAndCars: MonoBehaviour {
 			time = Time.time;
 		}
 		*/
-		//if (actualTile!=iactualTile) {
+		if (actualTile!=iactualTile) {
 		// Debug.Log("new actualLane "+actualTile+" "+actJob+"-["+speedtoGo+"/"+speedo+"]-"+levelz);
-		//}
+			if (arrLevel[-actualTile]==1) {
+				speedtoGo = speed;
+			}
+		}
 		actualTile = iactualTile;
 	}
 
