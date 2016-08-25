@@ -7,13 +7,13 @@ public class LanesAndCars: MonoBehaviour {
 	public GameObject backgroundPrefab; 
 	public GameObject backgroundPrefabLeft; 
 	public GameObject backgroundPrefabRight; 
-	int[] arrLevel = {0,0,1,0,1,2,0,0,1,0,0,0,1,2,0,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,0,3,0};
+	int[] arrLevel = {0,0,0,0,0,0,0,0,1,0,1,2,0,0,1,0,0,0,1,2,0,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,0,0,0,0,0,0,0,0,0,3,0};
 
 	public GameObject level;
 	public GameObject ground;
 
-	float offset = 0.05f;
-	float[] arrLane = { 0.0f, 0.08f };
+	float offset = 0.2f;
+	float[] arrLane = { 0.0f, 2.0f };
 
 	// Use this for initialization
 	void Start () {
@@ -36,7 +36,7 @@ public class LanesAndCars: MonoBehaviour {
 			if (obj!=null) {
 				obj.transform.parent = ground.transform;
 			}
-			posz = posz +0.2f;
+			posz = posz + depth;
 		}
 
 		time = Time.time;
@@ -44,17 +44,17 @@ public class LanesAndCars: MonoBehaviour {
 	
 	// Update is called once per frame
 	float speedo = 0.0f; // actual speed
-	float speedSpeed = 0.001f;
+	float speedSpeed = 0.03f; // 
 
-	float speed = -0.003f;
-	float speedExtended = -0.012f;
+	float speed = -0.1f;
+	float speedExtended = -0.3f;
 	int actualLaneLevel = 0;
 	int actualLane = 0;
-	float changeLaneSpeed = 0.01f;
+	float changeLaneSpeed = 0.3f;
 	float actSpeedX = 0.0f;
 
 	float levelz = 0.0f;
-	float depth = 0.2f;
+	float depth = 6.0f;
 	int actualTile = 0;
 
 	int actJob = 0;
@@ -105,7 +105,8 @@ public class LanesAndCars: MonoBehaviour {
 		if (actpos<actSpeedX) actSpeedX = actSpeedX - changeLaneSpeed;
 		if (actpos>actSpeedX) actSpeedX = actSpeedX + changeLaneSpeed;
 		ground.transform.position = new Vector3(0.0f+offset+actSpeedX,0.0f,levelz);
-		int iactualTile = (int)((levelz-0.4f)/depth);
+		int iactualTile = (int)((levelz-depth)/depth);
+		// int iactualTile = (int)((levelz)/depth);
 		// next level
 		/*
 		if (((-actualTile)+1)>arrLevel.Length) {
