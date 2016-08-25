@@ -61,9 +61,10 @@ public class TanksAndCars: MonoBehaviour {
 			posz = posz +depth;
 		}
 
-		time = Time.time;
+		levelz = 6.0f * 5.0f;
+//		state = "intro";
 
-		speedtoGo = speed;
+		// StartGame();
 	}
 	
 	// Update is called once per frame
@@ -89,10 +90,12 @@ public class TanksAndCars: MonoBehaviour {
 
 	void FixedUpdate () {
 
+		// wrongTurn = false;
+
 		actJob = arrLevel[-actualTile];
 		if (actJob==3) {
 			// end
-			levelz = 0.0f;
+			levelz = 6.0f * 5.0f; // 5.0
 			time = Time.time;
 		}
 
@@ -151,6 +154,8 @@ public class TanksAndCars: MonoBehaviour {
 		}
 		actualTile = iactualTile;
 	}
+
+
 
 	void Update() {
 		if (Input.GetKeyDown("left")) {
