@@ -153,6 +153,8 @@ public class LanesAndCars: MonoBehaviour {
 		actualTile = 0;
 		wheel1.enabled = true;
 		wheel2.enabled = true;
+		audioSpeed.Play();
+		audioSpeedExtended.Stop();
 
 	}
 
