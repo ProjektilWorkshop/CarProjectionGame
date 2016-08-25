@@ -12,8 +12,8 @@ public class LanesAndCars: MonoBehaviour {
 	public GameObject level;
 	public GameObject ground;
 
-	float offset = 0.2f;
-	float[] arrLane = { 0.0f, 2.0f };
+	float offset = 0.15f;
+	float[] arrLane = { 0.0f, 1.8f };
 
 	// Use this for initialization
 	void Start () {
@@ -46,8 +46,8 @@ public class LanesAndCars: MonoBehaviour {
 	float speedo = 0.0f; // actual speed
 	float speedSpeed = 0.03f; // 
 
-	float speed = -0.1f;
-	float speedExtended = -0.3f;
+	float speed = -0.07f;
+	float speedExtended = -0.2f;
 	int actualLaneLevel = 0;
 	int actualLane = 0;
 	float changeLaneSpeed = 0.3f;
