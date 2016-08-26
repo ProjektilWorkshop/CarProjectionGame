@@ -11,3 +11,7 @@ EditorBuildSettings:
     path: Assets/Scenes/LanesAndCars.unity
   - enabled: 1
     path: Assets/Scenes/LanesAndTanks.unity
+  - enabled: 1
+    path: Assets/UniversePong_Rosina/Scene/Pong.unity
+  - enabled: 1
+    path: Assets/Scenes/CarScene.unity

@@ -39,7 +39,7 @@ public class LanesAndCars: MonoBehaviour {
 	public GameObject particlesGO;
 
 
-	int[] arrLevel = {0,0,0,4,4,4,0,0,1,0,1,2,0,0,1,0,2,2,0,0,1,0,0,0,1,0,2,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,2,1,2,1,3,0};
+	int[] arrLevel = {0,0,0,4,4,4,0,0,1,0,1,2,0,0,1,0,2,2,0,0,1,0,0,0,1,0,2,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,1,2,1,2,1,1,0,0,0,2,1,2,1,0,0,0,0,3,0};
 
 	public GameObject level;
 	public GameObject ground;
@@ -49,6 +49,14 @@ public class LanesAndCars: MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		float score1 = PlayerPrefs.GetFloat("score1");
+		float score2 = PlayerPrefs.GetFloat("score2");
+		float score3 = PlayerPrefs.GetFloat("score3");
+
+		if (score1==0)PlayerPrefs.SetFloat ("score1",1000f );
+		if (score2==0)PlayerPrefs.SetFloat ("score2",1000 );
+		if (score3==0)PlayerPrefs.SetFloat ("score3",1000 );
 
 		// create a level!
 		// random
@@ -164,6 +172,8 @@ public class LanesAndCars: MonoBehaviour {
 		audioSpeedOnCross.Stop();
 		audioSpeedNormal.Play();
 
+		HighScoreFieldGO.SetActive (false);
+		HighScoreTextM.gameObject.SetActive (false);
 	}
 
 	void FixedUpdate () {
