@@ -26,7 +26,7 @@ public class ProjectorMovement : MonoBehaviour {
 
 	void OnTriggerExit(Collider inC){
 		if(inC.name == "Ground"){
-			Debug.Log("ground leave");
+			//Debug.Log("ground leave");
 			transform.position = otherProjector.position + diff;
 			GetComponent<Projector>().enabled = false;
 			otherProjector.GetComponent<Projector>().enabled = true;

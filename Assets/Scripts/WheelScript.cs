@@ -3,7 +3,9 @@ using System.Collections;
 
 public class WheelScript : MonoBehaviour {
 
-	float speed = -600;
+	public float speedX = -600;
+	public float speedY = 0;
+	public float speedZ = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -12,6 +14,6 @@ public class WheelScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate(Time.deltaTime*speed,0,0);
+		transform.Rotate(Time.deltaTime*speedX,Time.deltaTime*speedY,Time.deltaTime*speedZ);
 	}
 }
