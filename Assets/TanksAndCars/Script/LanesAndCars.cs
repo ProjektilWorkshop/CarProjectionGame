@@ -34,6 +34,8 @@ public class LanesAndCars: MonoBehaviour {
 	public GameObject tree1;
 	public GameObject tree2;
 
+	public GameObject particlesGO;
+
 
 	int[] arrLevel = {0,0,0,4,4,4,0,0,1,0,1,2,0,0,1,0,0,0,1,0,0,0,1,0,2,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,2,1,2,1,3,0};
 
@@ -264,10 +266,12 @@ public class LanesAndCars: MonoBehaviour {
 		break1.SetActive(true);
 		break2.SetActive(true);
 		wrongTurn = true;
+		particlesGO.SetActive (true);
 	}
 	void Faster() {
 		break1.SetActive(false);
 		break2.SetActive(false);
+		particlesGO.SetActive (false);
 	}
 
 	bool wrongTurn = false;
