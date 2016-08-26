@@ -16,6 +16,8 @@ public class LanesAndCars: MonoBehaviour {
 	public WheelScript wheel1;
 	public WheelScript wheel2;
 	public TextMesh textObj;
+	public TextMesh HighScoreTextM;
+	public GameObject HighScoreFieldGO;
 
 	string gameTime = "";
 	bool backupWrongTurn = false;
@@ -37,7 +39,7 @@ public class LanesAndCars: MonoBehaviour {
 	public GameObject particlesGO;
 
 
-	int[] arrLevel = {0,0,0,4,4,4,0,0,1,0,1,2,0,0,1,0,0,0,1,0,0,0,1,0,2,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,2,1,2,1,3,0};
+	int[] arrLevel = {0,0,0,4,4,4,0,0,1,0,1,2,0,0,1,0,2,2,0,0,1,0,0,0,1,0,2,0,1,0,0,1,1,1,1,2,2,2,2,0,0,2,1,1,1,0,2,1,2,1,3,0};
 
 	public GameObject level;
 	public GameObject ground;
@@ -74,8 +76,8 @@ public class LanesAndCars: MonoBehaviour {
 			}
 			// add trees
 			if (addTree)
-			if (UnityEngine.Random.Range(0,3)==0) {
-				int amount = UnityEngine.Random.Range(0,4);
+			if (UnityEngine.Random.Range(0,4)==0) {
+				int amount = UnityEngine.Random.Range(0,3);
 				for (int a=0;a<amount;a++) {
 					int which = UnityEngine.Random.Range(0,3);
 					float wherex = Random.Range(6.0f,10.0f);
@@ -122,6 +124,8 @@ public class LanesAndCars: MonoBehaviour {
 
 	float time = 0.0f;
 
+
+
 	void SetState( string newstate ) {
 		Debug.Log("LanesAndCars.SetState("+newstate+")");
 		state = newstate;
@@ -134,6 +138,8 @@ public class LanesAndCars: MonoBehaviour {
 			SetCarPosition(levelz);
 			audioSpeedOnCross.Stop();
 			audioSpeedNormal.Stop();
+			HighScoreFieldGO.SetActive (false);
+			HighScoreTextM.gameObject.SetActive (false);
 		}
 		if (newstate.Equals("")) {
 			StartGame();
@@ -170,7 +176,8 @@ public class LanesAndCars: MonoBehaviour {
 
 			wrongTurn = false;
 
-			gameTime = ""+((int) ((Time.time-time)*10))/10.0f;
+			float currentScore = (Time.time - time);
+			gameTime = ""+((int) (currentScore*10))/10.0f;
 			SetMessage(""+gameTime+" SEC");
 
 			actJob = arrLevel[-actualTile];
@@ -179,6 +186,40 @@ public class LanesAndCars: MonoBehaviour {
 				// levelz = 0.0f;
 				// time = Time.time;
 				SetState("stop");
+
+				// Show Highscore
+
+				HighScoreFieldGO.SetActive (true);
+				HighScoreTextM.gameObject.SetActive (true);
+
+				float score1 = PlayerPrefs.GetFloat("score1");
+				float score2 = PlayerPrefs.GetFloat("score2");
+				float score3 = PlayerPrefs.GetFloat("score3");
+
+				if (score1 > currentScore) {
+					score3 = score2;
+					score2 = score1;
+					score1 = currentScore;
+					HighScoreTextM.text = "NEW 1ST PLACE!";
+				}else if (score2 > currentScore) {
+					score3 = score2;
+					score2 = currentScore;
+					HighScoreTextM.text = "New 2nd place!";
+				}else if (score3 > currentScore) {
+					score3 = currentScore;
+					HighScoreTextM.text = "New 3nd place!";
+				}else {
+					HighScoreTextM.text = "No highscore...\ntry again!";
+				}
+
+				HighScoreTextM.text +=  "\n\n1st: " + score1 +
+					"\n2nd: " + score2 +
+					"\n3rd: " + score3;
+
+				PlayerPrefs.SetFloat ("score1", score1);
+				PlayerPrefs.SetFloat ("score2", score2);
+				PlayerPrefs.SetFloat ("score3", score3);
+
 				return;
 			} 
 
@@ -299,8 +340,5 @@ public class LanesAndCars: MonoBehaviour {
 
 
 	}
-
-	void OnGUI() {
-		GUI.Label(new Rect(0,0,200,20),"TIME: "+(Time.time-time));
-	}
+		
 }
