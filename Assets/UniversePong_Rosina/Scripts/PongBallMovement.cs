@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PongBallMovement : MonoBehaviour {
 
-	private float speed= 6;
+	private float speed= 4;
 	private bool PlayerFirst = false;
 
 	// Use this for initialization
