@@ -12,7 +12,6 @@ public class CustomTextureAnimation : MonoBehaviour {
 	void Start () {
 		this.textures = Resources.LoadAll <Texture2D> (this.folderName);
 		this.renderer = GetComponent<Renderer> ();
-		Debug.Log ("Loaded from "+this.ToString()+": "+this.textures.Length+" textures");
 	}
 	
 	// Update is called once per frame
