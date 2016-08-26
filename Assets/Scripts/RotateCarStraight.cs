@@ -25,7 +25,7 @@ public class RotateCarStraight : MonoBehaviour {
 			}
 		}
 		if (tanksAndCars!=null) {
-
+			doRotation = true;
 		}
 		if (doRotation) {
 			float xRot = Mathf.Sin(Time.time * 20.0f ) * 1.0f * factor;

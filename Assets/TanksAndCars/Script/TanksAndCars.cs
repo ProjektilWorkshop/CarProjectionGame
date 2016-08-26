@@ -7,9 +7,12 @@ public class TanksAndCars: MonoBehaviour {
 	int levelDifficulty = 0; // level to go ...
 	int score = 0;
 
+	public GameObject hitbox;
+
 	public TextMesh textObj;
 
 	public GameObject enemyTank;
+	public GameObject enemyTankShoot;
 
 	public AudioSource audioAcc;
 	public AudioSource audioBreak;
@@ -20,7 +23,7 @@ public class TanksAndCars: MonoBehaviour {
 	public GameObject backgroundPrefab; 
 	public GameObject backgroundPrefabLeft; 
 	public GameObject backgroundPrefabRight; 
-	int[] arrLevel = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,0,0,0,0,0,3,0,0,0,0};
+	int[] arrLevel = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0};
 
 	public GameObject level;
 	public GameObject ground;
@@ -34,6 +37,10 @@ public class TanksAndCars: MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		if (hitbox!=null) {
+			hitbox.SetActive(true);
+		}
 
 		// time for an enemy?
 		if (Time.time>timeTimerNextEnemy) {
@@ -67,7 +74,7 @@ public class TanksAndCars: MonoBehaviour {
 				obj = (GameObject) Instantiate( backgroundPrefabLeft, new Vector3(0.0f,0.0f,posz), new Quaternion());
 			}
 			if (el==3) {
-				obj = (GameObject) Instantiate( backgroundPrefabLeft, new Vector3(0.0f,0.0f,posz), new Quaternion());
+				obj = (GameObject) Instantiate( backgroundPrefab, new Vector3(0.0f,0.0f,posz), new Quaternion());
 			}
 			// backgroundPrefabRight
 			if (obj!=null) {
@@ -76,11 +83,14 @@ public class TanksAndCars: MonoBehaviour {
 			posz = posz +depth;
 		}
 
-		levelz = 0.0f; // 6.0f * 5.0f;
+		levelz = -6.0f * 5.0f;
 //		state = "intro";
 
 		// StartGame();
 		actualTile = -5;
+
+
+		StartGame();
 	}
 	
 	// Update is called once per frame
@@ -88,11 +98,11 @@ public class TanksAndCars: MonoBehaviour {
 	public float GetSpeedDo() {
 		return speedo;
 	}
-	float speedSpeed = 0.075f; // adapt in tankroad !!!
-	float speedSpeedBreak = 0.01f; 
+	float speedSpeed = 0.005f; // adapt in tankroad !!!
+	float speedSpeedBreak = 0.015f; 
 
-	float speed = -0.03f;
-	float speedExtended = -0.3f;
+	float speed = -0.1f;
+	float speedExtended = -0.4f;
 	int actualLaneLevel = 0;
 	int actualLane = 0;
 	float changeLaneSpeed = 0.3f;
@@ -111,27 +121,35 @@ public class TanksAndCars: MonoBehaviour {
 	float timeToRelease = 0.0f;
 	float timeToReleaseInterval = 1.0f;
 
+	int doneTiles = 0;
+	int lifes = 0;
+
+	void StartGame() {
+		doneTiles = 0;
+	}
+
 	void FixedUpdate () {
 		 
 		// Debug.Log("TanksAndCars.FixedUpdate() // actualTile: "+actualTile);
 
 		// Debug.Log("TanksAndCars.FixedUpdate() // levelz: "+levelz);
 
-		SetMessage("SCORE: "+score +" LEVEL: "+levelDifficulty);
+		SetMessage(""+(doneTiles*3) +"m L:"+lifes+" D:"+levelDifficulty);
 
 		// ...
 		if (Time.time>timeToRelease) {
 			timeToRelease = Time.time + timeToReleaseInterval;
 
 			float posz = levelz;
-
-			GameObject obj;
-			obj = (GameObject) Instantiate( enemyTank, new Vector3(-3.0f-Random.Range(0.0f,4.0f),0.0f,-10.0f-Random.Range(0.0f,4.0f)), new Quaternion());
-			if (obj!=null) {
-				obj.transform.parent = enemies.transform;
-				TankRoad tr = obj.GetComponent<TankRoad>();
-				if (tr!=null) {
-					tr.gameLogic = this;
+			if (UnityEngine.Random.Range(0,2)==0) {
+				GameObject obj;
+				obj = (GameObject) Instantiate( enemyTank, new Vector3(-3.0f-Random.Range(0.0f,4.0f),0.0f,-10.0f-Random.Range(0.0f,4.0f)), new Quaternion());
+				if (obj!=null) {
+					obj.transform.parent = enemies.transform;
+					TankRoad tr = obj.GetComponent<TankRoad>();
+					if (tr!=null) {
+						tr.gameLogic = this;
+					}
 				}
 			}
 
@@ -202,8 +220,28 @@ public class TanksAndCars: MonoBehaviour {
 			if (arrLevel[-actualTile]==1) {
 				speedtoGo = speed;
 			}
+			doneTiles++;
 		}
 		actualTile = iactualTile;
+	}
+
+	public void CreateShootAt( Vector3 position, float speedx ) {
+		Debug.Log("CreateShootAt("+speedx+")");
+		GameObject obj;
+		obj = (GameObject) Instantiate( enemyTankShoot, new Vector3(position.x,position.y,position.z), new Quaternion());
+		if (obj!=null) {
+			obj.transform.parent = enemies.transform;
+			TankRoadShoot trx = obj.GetComponent<TankRoadShoot>();
+			if (trx!=null) {
+				Debug.Log("CreateShootAt("+speedx+").SetSpeed");
+				trx.gameLogic = this;
+				trx.SetSpeedX(speedx);
+			} else {
+				Debug.Log("CreateShootAt("+speedx+") TankRoadShoot not found!");
+			}
+		}
+
+
 	}
 
 	void SetMessage( string msg ) {
