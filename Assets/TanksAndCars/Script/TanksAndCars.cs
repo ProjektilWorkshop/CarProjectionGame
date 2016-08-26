@@ -4,12 +4,23 @@ using System.Collections;
 
 public class TanksAndCars: MonoBehaviour {
 
+	int levelDifficulty = 0; // level to go ...
+	int score = 0;
+
+	public TextMesh textObj;
+
 	public GameObject enemyTank;
 
+	public AudioSource audioAcc;
+	public AudioSource audioBreak;
+
+	public GameObject break1;
+	public GameObject break2;
+	 
 	public GameObject backgroundPrefab; 
 	public GameObject backgroundPrefabLeft; 
 	public GameObject backgroundPrefabRight; 
-	int[] arrLevel = {0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,0,0,0,0,0,3,0,0,0,0};
+	int[] arrLevel = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,0,0,0,0,0,3,0,0,0,0};
 
 	public GameObject level;
 	public GameObject ground;
@@ -55,24 +66,33 @@ public class TanksAndCars: MonoBehaviour {
 			if (el==2) {
 				obj = (GameObject) Instantiate( backgroundPrefabLeft, new Vector3(0.0f,0.0f,posz), new Quaternion());
 			}
+			if (el==3) {
+				obj = (GameObject) Instantiate( backgroundPrefabLeft, new Vector3(0.0f,0.0f,posz), new Quaternion());
+			}
+			// backgroundPrefabRight
 			if (obj!=null) {
 				obj.transform.parent = ground.transform;
 			}
 			posz = posz +depth;
 		}
 
-		levelz = 6.0f * 5.0f;
+		levelz = 0.0f; // 6.0f * 5.0f;
 //		state = "intro";
 
 		// StartGame();
+		actualTile = -5;
 	}
 	
 	// Update is called once per frame
 	float speedo = 0.0f; // actual speed
-	float speedSpeed = 0.03f;
+	public float GetSpeedDo() {
+		return speedo;
+	}
+	float speedSpeed = 0.075f; // adapt in tankroad !!!
+	float speedSpeedBreak = 0.01f; 
 
-	float speed = -0.07f;
-	float speedExtended = -0.4f;
+	float speed = -0.03f;
+	float speedExtended = -0.3f;
 	int actualLaneLevel = 0;
 	int actualLane = 0;
 	float changeLaneSpeed = 0.3f;
@@ -88,15 +108,45 @@ public class TanksAndCars: MonoBehaviour {
 
 	float speedtoGo = 0.0f;
 
+	float timeToRelease = 0.0f;
+	float timeToReleaseInterval = 1.0f;
+
 	void FixedUpdate () {
+		 
+		// Debug.Log("TanksAndCars.FixedUpdate() // actualTile: "+actualTile);
+
+		// Debug.Log("TanksAndCars.FixedUpdate() // levelz: "+levelz);
+
+		SetMessage("SCORE: "+score +" LEVEL: "+levelDifficulty);
+
+		// ...
+		if (Time.time>timeToRelease) {
+			timeToRelease = Time.time + timeToReleaseInterval;
+
+			float posz = levelz;
+
+			GameObject obj;
+			obj = (GameObject) Instantiate( enemyTank, new Vector3(-3.0f-Random.Range(0.0f,4.0f),0.0f,-10.0f-Random.Range(0.0f,4.0f)), new Quaternion());
+			if (obj!=null) {
+				obj.transform.parent = enemies.transform;
+				TankRoad tr = obj.GetComponent<TankRoad>();
+				if (tr!=null) {
+					tr.gameLogic = this;
+				}
+			}
+
+		}
+
+		// return; 
 
 		// wrongTurn = false;
-
-		actJob = arrLevel[-actualTile];
-		if (actJob==3) {
-			// end
-			levelz = 6.0f * 5.0f; // 5.0
-			time = Time.time;
+		if (((-actualTile)>=0)&&(-actualTile<arrLevel.Length)) {
+			actJob = arrLevel[-actualTile];
+			if (actJob==3) {
+				// end
+				levelz = 0.0f; // - 6.0f * 5.0f; // 5.0
+				time = Time.time;
+			}
 		}
 
 
@@ -124,8 +174,9 @@ public class TanksAndCars: MonoBehaviour {
 		*/
 
 		// update speed
+		// Debug.Log("TanksAndCars.FixedUpdate() // speedo["+speedo+"] speedtoGo["+speedtoGo+"]");
 		if (speedo>speedtoGo) {
-			speedo = speedo - 3*speedSpeed;
+			speedo = speedo - speedSpeedBreak;
 		}
 		if (speedo<speedtoGo) {
 			speedo = speedo + speedSpeed;
@@ -138,7 +189,7 @@ public class TanksAndCars: MonoBehaviour {
 		if (actpos<actSpeedX) actSpeedX = actSpeedX - changeLaneSpeed;
 		if (actpos>actSpeedX) actSpeedX = actSpeedX + changeLaneSpeed;
 		ground.transform.position = new Vector3(0.0f+offset+actSpeedX,0.0f,levelz);
-		int iactualTile = (int)((levelz-depth)/depth);
+		int iactualTile =(int)((levelz/*-depth*/)/depth);
 		// next level
 		/*
 		if (((-actualTile)+1)>arrLevel.Length) {
@@ -155,17 +206,28 @@ public class TanksAndCars: MonoBehaviour {
 		actualTile = iactualTile;
 	}
 
+	void SetMessage( string msg ) {
+		textObj.text = msg;
+	}
 
+	// 		
 
 	void Update() {
 		if (Input.GetKeyDown("left")) {
 			// actualLane = 0	;	
 			speedtoGo = speedExtended;
+			audioAcc.Play();
+			audioBreak.Stop();
+			break1.SetActive(false);
+			break2.SetActive(false);
 		}
 		if (Input.GetKeyDown("right")) {
 			// actualLane = 1	;
 			speedtoGo = speed;
-
+			audioAcc.Stop();
+			audioBreak.Play();
+			break1.SetActive(true);
+			break2.SetActive(true);
 		}
 
 	}
