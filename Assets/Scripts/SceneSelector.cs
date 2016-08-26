@@ -14,7 +14,8 @@ public class SceneSelector : MonoBehaviour {
 
 		// Add KeyCode and Scene Name
 		this.keyToSceneDictionary.Add (KeyCode.Alpha1 , "IdleModeScene" );
-		this.keyToSceneDictionary.Add (KeyCode.Alpha2 , "TemplateScene" );
+		this.keyToSceneDictionary.Add (KeyCode.Alpha2 , "LanesAndCars" );
+		this.keyToSceneDictionary.Add (KeyCode.Alpha3 , "LanesAndTanks" );
 
 		// Pseudo singleton. Destroy all SceneSelector Game Object except one
 		GameObject[] gos = GameObject.FindGameObjectsWithTag("SceneSelector");
